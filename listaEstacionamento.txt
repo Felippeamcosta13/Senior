@@ -1,0 +1,59 @@
+DEFINIR CURSOR Cur_USU_T100EST;
+DEFINIR CURSOR Cur_USU_T102VAGA;
+Definir Numero nContador; 
+Definir Numero xEntrada;
+Definir Cursor CurTotal;
+Definir Numero nCodEst;
+Definir alfa aretorno;
+Definir interno.com.senior.g5.rh.fp.estacionamento.listarEstacionamentos this;
+
+Cur_USU_T100EST.sql "SELECT * FROM USU_T100EST";
+
+Cur_USU_T100EST.AbrirCursor();
+
+ENQUANTO (Cur_USU_T100EST.Achou)
+{
+    this.lista.CriarLinha();
+    this.lista.codest = Cur_USU_T100EST.USU_codest;
+    this.lista.desest = Cur_USU_T100EST.USU_desest;
+    this.lista.qtdvag = Cur_USU_T100EST.USU_qtdvag;
+     
+    Cur_USU_T100EST.Proximo();
+}
+Cur_USU_T100EST.FecharCursor();
+
+
+ 
+    inicio
+  xEntrada = this.codest;    
+
+  CurTotal.SQL "SELECT USU_QTDVAG FROM USU_T100EST WHERE USU_CODEST = :xEntrada";
+  CurTotal.AbrirCursor();
+  
+  Se (CurTotal.Achou) {
+  nTotalVagas = CurTotal.USU_QTDVAG;
+  }
+  
+  CurTotal.FecharCursor();
+  
+  Cur_USU_T102VAGA.SQL "SELECT USU_T102VAGA.USU_PLAVEI FROM USU_T102VAGA WHERE USU_T102VAGA.USU_CODEST = :xEntrada"; 
+  Cur_USU_T102VAGA.AbrirCursor();
+  
+  nContador = 0; 
+  Enquanto(Cur_USU_T102VAGA.Achou) { 
+  nContador++; 
+  Cur_USU_T102VAGA.Proximo();
+  }
+  Cur_USU_T102VAGA.FecharCursor();
+  
+  Se (nContador >= nTotalVagas){
+    aRetorno =  " Não possui vagas disponivel ! "; 
+    
+  }  
+  SENAO    {
+   
+    aRetorno =  " Vagas disponiveis ! "; 
+    
+  }  
+     this.retorno = aRetorno;
+     fim
