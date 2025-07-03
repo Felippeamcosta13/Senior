@@ -1,0 +1,24 @@
+DEFINIR CURSOR Cur_USU_T101VEI;
+Definir Numero xEntrada;
+Definir interno.com.senior.g5.rh.fp.veiculo.listarVeiculo this;
+
+xEntrada = this.numcad;    
+
+Cur_USU_T101VEI.sql "SELECT * FROM USU_T101VEI WHERE USU_NUMCAD = :xEntrada";
+
+Cur_USU_T101VEI.AbrirCursor();
+
+ENQUANTO (Cur_USU_T101VEI.Achou)
+{
+    this.lista.CriarLinha();
+    this.lista.numcad = Cur_USU_T101VEI.USU_NUMCAD;
+    this.lista.numemp = Cur_USU_T101VEI.USU_NUMEMP;
+    this.lista.tipcol = Cur_USU_T101VEI.USU_TIPCOL;
+    this.lista.plavei = Cur_USU_T101VEI.USU_PLAVEI;
+    this.lista.modvei = Cur_USU_T101VEI.USU_MODVEI;
+    this.lista.anovei = Cur_USU_T101VEI.USU_ANOVEI;
+    this.lista.corvei = Cur_USU_T101VEI.USU_CORVEI;
+     
+    Cur_USU_T101VEI.Proximo();
+}
+Cur_USU_T101VEI.FecharCursor();

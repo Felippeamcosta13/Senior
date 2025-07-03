@@ -1,0 +1,62 @@
+Definir interno.com.senior.g5.rh.fp.veiculo.crudVeiculo this;
+Definir Cursor Cur_PlaVei;
+Definir Cursor Cur_InsVei;
+Definir Numero nCodVagas;
+Definir Numero nNumCad;
+Definir Numero nNumEmp;
+Definir alfa aTipCol;
+Definir alfa aPlaVei;
+Definir alfa aModVei;
+Definir Numero nAnoVei;
+Definir alfa aCorVei;
+Definir Alfa aTipOp;
+Definir Alfa nRetorno;
+
+   aTipOp =  this.tipop;
+   nNumCad = this.numcad;
+   nNumEmp = this.numemp;
+   aTipCol = this.tipcol;  
+   aPlaVei = this.plavei;
+   aModVei = this.modvei;
+   nAnoVei = this.anovei;
+   aCorVei = this.corvei; 
+   
+  Se (aTipOp = "I") {
+  Se ((aModVei = "") ou (nAnoVei = 0) ou (aCorVei = "") ){
+  Mensagem(Erro, "É obrigatório preencher ano, modelo e cor ao inserir um veiculo");
+  } Senao {
+   Cur_PlaVei.SQL "SELECT USU_PLAVEI FROM USU_T101VEI WHERE USU_PLAVEI = :aPlaVei";
+
+  Cur_PlaVei.AbrirCursor();
+  
+  Se (Cur_PlaVei.Achou) {
+     
+     mensagemlog("veiculo já cadastrado");    
+      
+   }
+     Cur_PlaVei.FecharCursor();     
+   
+   
+ ExecSql "INSERT INTO USU_T101VEI (usu_numcad,usu_numemp,usu_tipcol,usu_plavei,usu_modvei,usu_anovei, usu_corvei) VALUES ( :nNumCad,:nNumEmp,:aTipCol,:aPlaVei,:aModVei,:nAnoVei,:aCorVei) ";
+              
+      this.retorno = "Veiculo Cadastrado";
+     
+       
+  }
+}
+ Se (aTipOp = 'E') {
+  ExecSql "DELETE FROM USU_T101VEI WHERE USU_PLAVEI = :aPlaVei";
+
+   this.retorno = "Veiculo Excluido";
+  }
+ Se (aTipOp = 'U') {
+
+   
+ ExecSql "UPDATE USU_T101VEI SET USU_NUMCAD = :nNumCad ,USU_NUMEMP = :nNumEmp,USU_TIPCOL = :aTipCol , USU_PLAVEI = :aPlaVei, USU_MODVEI = :aModVei, USU_ANOVEI = :nAnoVei,USU_CORVEI =:aCorVei WHERE USU_PLAVEI = :aPlaVei";
+
+       Cur_InsVei.SQL "SELECT USU_PLAVEI FROM USU_T101VEI WHERE USU_PLAVEI =:aPlaVei";
+  Cur_InsVei.AbrirCursor();
+      this.retorno = "Veiculo Atualizada";
+    
+    }
+      Cur_InsVei.FecharCursor();
