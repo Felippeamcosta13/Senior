@@ -1,0 +1,34 @@
+module.exports = async (authorization, parameters) => {
+  const axios = require('axios');
+  const url = "https://platform-homologx.senior.com.br/t/senior.com.br/bridge/1.0/rest/platform/conector/actions/invoke"
+  const data = {
+      "id": "b0d5b4d8-a857-4261-bb7e-efa6342296e1",
+      "configurationId": "7384ded7-440f-4542-9f03-f1fb1be6d14d",
+      "inputData": {
+          "server": "http://ec2-54-86-30-4.compute-1.amazonaws.com:8080/",
+          "module": "rubi",
+          "port": "listarVagasBot",
+          "service": "com.senior.g5.rh.fp.vaga",
+          "user": "alexandre",
+          "password": "senior123",
+          "encryption": "0",
+          "rootObject": ""
+      }
+  }
+
+  const headers = {
+      "Content-Type": "application/json",
+      "Authorization": authorization,
+      "X-User-Timezone-Offset": -3
+  };
+ 
+  const response = await axios.post(url, data, {
+      headers: headers
+  });
+  var result = '';
+  result = response.data.outputData.text;
+  return {
+      type: 'PLAINTEXT',
+      text: [result]
+  }
+}
