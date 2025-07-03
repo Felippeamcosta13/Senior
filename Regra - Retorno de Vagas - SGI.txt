@@ -1,0 +1,32 @@
+Definir Numero nContador; 
+Definir Numero nCodEst;
+Definir Cursor CurTotal;
+Definir Cursor Cur_USU_T102VAGA;       
+
+
+Se (CodOpe = "AntesInserir") {
+  nCodEst = USU_T102VAGA_USU_CODEST;
+  CurTotal.SQL "SELECT USU_QTDVAG FROM USU_T100EST WHERE USU_CODEST = :nCodEst";
+  CurTotal.AbrirCursor();
+  
+  Se (CurTotal.Achou) {
+  nTotalVagas = CurTotal.USU_QTDVAG;
+  }
+  
+  CurTotal.FecharCursor();
+  
+  Cur_USU_T102VAGA.SQL "SELECT USU_T102VAGA.USU_PLAVEI FROM USU_T102VAGA WHERE USU_T102VAGA.USU_CODEST = :nCodEst"; 
+  Cur_USU_T102VAGA.AbrirCursor();
+  
+  nContador = 0; 
+  Enquanto(Cur_USU_T102VAGA.Achou) { 
+  nContador++; 
+  Cur_USU_T102VAGA.Proximo();
+  }
+  Cur_USU_T102VAGA.FecharCursor();
+  
+  Se (nContador >= nTotalVagas){
+    MsgErro =  " O Estacionamento não tem vaga disponivel ! "; 
+    Cancel(1);
+  }  
+} 
