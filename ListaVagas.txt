@@ -1,0 +1,65 @@
+DEFINIR CURSOR Cur_USU_T102VAGA;
+Definir Cursor CurTotal;
+Definir Cursor CurCodVag;
+Definir Numero nContador;
+Definir Numero nTotalVagas; 
+Definir Numero nCodVagas; 
+Definir Numero xEntrada;
+Definir Numero nCodEst;
+Definir alfa aretorno;
+Definir interno.com.senior.g5.rh.fp.vaga.listarVagas this;
+
+  
+Cur_USU_T102VAGA.sql "SELECT * FROM USU_T102VAGA";
+
+Cur_USU_T102VAGA.AbrirCursor();
+
+ENQUANTO (Cur_USU_T102VAGA.Achou)
+{
+    this.lista.CriarLinha();
+    this.lista.codvag = Cur_USU_T102VAGA.USU_CODVAG;
+    this.lista.codest = Cur_USU_T102VAGA.USU_CODEST;
+    this.lista.numemp = Cur_USU_T102VAGA.USU_NUMEMP;
+    this.lista.desest = Cur_USU_T102VAGA.USU_DESEST;
+    this.lista.tipcol = Cur_USU_T102VAGA.USU_TIPCOL;
+    this.lista.numcad = Cur_USU_T102VAGA.USU_NUMCAD;
+    this.lista.plavei = Cur_USU_T102VAGA.USU_PLAVEI;
+    this.lista.modvei = Cur_USU_T102VAGA.USU_MODVEI;
+                                             
+     
+    Cur_USU_T102VAGA.Proximo();
+}
+Cur_USU_T102VAGA.FecharCursor();
+
+  xEntrada = this.codest;    
+
+  CurTotal.SQL "SELECT USU_QTDVAG FROM USU_T100EST WHERE USU_CODEST = :xEntrada";
+  CurTotal.AbrirCursor();
+  
+  Se (CurTotal.Achou) {
+  nTotalVagas = CurTotal.USU_QTDVAG;
+  }
+  
+  CurTotal.FecharCursor();
+  
+  Cur_USU_T102VAGA.SQL "SELECT USU_T102VAGA.USU_PLAVEI FROM USU_T102VAGA WHERE USU_T102VAGA.USU_CODEST = :xEntrada"; 
+  Cur_USU_T102VAGA.AbrirCursor();
+  
+  nContador = 0; 
+  Enquanto(Cur_USU_T102VAGA.Achou) { 
+  nContador++; 
+  Cur_USU_T102VAGA.Proximo();
+  }
+  Cur_USU_T102VAGA.FecharCursor();
+  
+  Se (nContador >= nTotalVagas){
+    this.retorno ="Não possui vagas disponivel"; 
+    
+  }  
+  SENAO    {
+   
+    this.retorno =  "Vagas disponiveis"; 
+    
+  }  
+     
+  

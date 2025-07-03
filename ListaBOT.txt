@@ -1,0 +1,47 @@
+Definir Cursor Cur_USU_T100EST;
+Definir Cursor Cur_USU_T102VAGA;
+nContadorVagasPreenchidas = 0;
+Definir Alfa aMensagem;
+Definir Alfa aEnter;
+Definir Alfa aContadorVagasPreenchidas;
+Definir Alfa aVagasDisponiveis;
+ 
+RetornaAscII(13, aEnter);
+ 
+aMensagem = "";
+ 
+@Cursor para localizar o estacionamento@
+Cur_USU_T100EST.SQL "SELECT USU_CODEST, USU_DESEST, USU_QTDVAG FROM USU_T100EST ORDER BY USU_CODEST";
+ 
+Cur_USU_T100EST.AbrirCursor();
+ 
+Enquanto (Cur_USU_T100EST.Achou)
+  Inicio
+  nCodEst = Cur_USU_T100EST.USU_CODEST;
+  nNumVag = Cur_USU_T100EST.USU_QTDVAG;
+  aMensagem = aMensagem + " - Nome do Estacionamento: " + Cur_USU_T100EST.USU_DESEST + aEnter;
+  @Cursor para localizar quantas vagas foram preenchidas em cada estacionamento@
+ Cur_USU_T102VAGA.sql "SELECT USU_PLAVEI, USU_NUMEMP, USU_TIPCOL, USU_NUMCAD FROM USU_T102VAGA WHERE USU_CODEST = :nCodEst";
+ 
+  Cur_USU_T102VAGA.AbrirCursor();
+ 
+    Enquanto (Cur_USU_T102VAGA.Achou) {
+      nContadorVagasPreenchidas++;
+      Cur_USU_T102VAGA.Proximo();
+    }
+    nVagasDisponiveis = nNumVag - nContadorVagasPreenchidas;
+    ConverteMascara(2,nContadorVagasPreenchidas, aContadorVagasPreenchidas,"ZZZ9");
+    ConverteMascara(2,nVagasDisponiveis, aVagasDisponiveis,"ZZZ9");
+    IntParaAlfa(nVagasDisponiveis, aVagasDisponiveis);
+    aMensagem = aMensagem + " - Vagas Preenchidas: " + aContadorVagasPreenchidas + aEnter;
+    aMensagem = aMensagem + " - Vagas Disponíveis: " + aVagasDisponiveis + aEnter;
+    nContadorVagasPreenchidas = 0;
+    nVagasDisponiveis = 0;
+  Cur_USU_T102VAGA.FecharCursor();
+ 
+  Cur_USU_T100EST.Proximo();
+  Fim;
+Cur_USU_T100EST.FecharCursor();
+ 
+listarVagasBot.text = aMensagem;
+listarVagasBot.type = "PLAINTEXT";

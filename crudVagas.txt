@@ -1,0 +1,79 @@
+Definir interno.com.senior.g5.rh.fp.vaga.crudVagas this;
+Definir Cursor Cur_Vaga;
+Definir Cursor Cur_Est;
+Definir Cursor Cur_CodVag;
+Definir Cursor Cur_InsVag;
+Definir Numero nNumEmp;
+Definir Numero nCodVag;
+Definir Numero nCodVagas;
+Definir Numero nCodEst;
+Definir Numero nCodEst2;
+Definir Numero nNumVag;
+Definir Numero nNumVaga;
+Definir Numero nretorno; 
+Definir Numero nNumCad;
+Definir Alfa aContadorVagasPreenchidas;
+Definir Alfa aVagasDisponiveis;  
+Definir Alfa aTipOp;
+Definir alfa aDesEst;
+Definir alfa aTipCol;
+Definir alfa aPlaVei;
+Definir alfa aModVei;
+Definir Alfa nUltCad;
+
+  nContadorVagasPreenchidas = 0;
+  nCodEst =  this.codest;
+  nCodVag =  this.codvag;
+  aTipOp =   this.tipop;
+  
+  Se (aTipOp = 'E') {
+  ExecSql "DELETE FROM USU_T102VAGA WHERE USU_CODVAG = :nCodVag";
+ Cur_Est.SQL "SELECT USU_CODEST, USU_DESEST, USU_QTDVAG FROM USU_T100EST WHERE USU_CODEST = :nCodEst";
+ 
+ 
+    Cur_Est.AbrirCursor();
+    
+  
+    nCodEst2 =  Cur_Est.USU_CODEST;
+    nNumVaga =  Cur_Est.USU_QTDVAG;
+  Cur_Vaga.SQL "SELECT USU_PLAVEI, USU_NUMEMP, USU_TIPCOL, USU_NUMCAD FROM USU_T102VAGA WHERE USU_CODEST = :nCodEst";
+  
+  Cur_Vaga.AbrirCursor();
+  
+    Enquanto (Cur_Vaga.Achou) {
+      nContadorVagasPreenchidas++;
+      Cur_Vaga.Proximo();
+    }
+    nVagasDisponiveis = nNumVaga - nContadorVagasPreenchidas;
+ 
+    this.retorno = nVagasDisponiveis;
+    this.ultcad = "Vaga Excluida";
+    Cur_Vaga.FecharCursor();
+   }
+
+
+   Se (aTipOp = 'U') {
+  
+ 
+    nCodVag = this.codvag;
+    nCodEst = this.codest;
+    nNumEmp = this.numemp;
+    aDesEst = this.desest;
+    aTipCol = this.tipcol;  
+    nNumCad = this.numcad;
+    aPlaVei = this.plavei;
+    aModVei = this.modvei;
+    
+      
+  ExecSql "UPDATE USU_T102VAGA SET USU_CODVAG = :nCodVag,USU_CODEST = :nCodEst,USU_NUMEMP = :nNumEmp , USU_DESEST = :aDesEst, USU_TIPCOL = :aTipCol, USU_NUMCAD = :nNumCad,USU_PLAVEI =:aPlaVei, USU_MODVEI = :aModVei WHERE USU_CODVAG = :nCodVag";
+    
+       Cur_InsVag.SQL "SELECT usu_codvag FROM usu_T102vaga WHERE usu_codvag =:nCodVag";
+       
+Cur_InsVag.AbrirCursor(); 
+
+      this.ultcad = "Vaga Atualizada";
+ 
+       
+    Cur_InsVag.FecharCursor();
+    
+    }

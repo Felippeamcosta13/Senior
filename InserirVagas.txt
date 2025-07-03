@@ -1,0 +1,45 @@
+Definir interno.com.senior.g5.rh.fp.vaga.inserirVagas this;
+Definir Cursor Cur_CodVag;
+Definir Cursor Cur_InsVag;
+Definir Numero nCodVagas;
+Definir Numero nretorno; 
+Definir Numero nCodEst;
+Definir Numero nNumEmp;
+Definir alfa aDesEst;
+Definir alfa aTipCol;
+Definir Numero nNumCad;
+Definir alfa aPlaVei;
+Definir alfa aModVei;
+Definir Alfa nUltCad;
+
+
+ Cur_CodVag.SQL "SELECT USU_CODVAG FROM USU_T102VAGA ORDER BY USU_CODVAG DESC";
+
+  Cur_CodVag.AbrirCursor();
+  
+  Se (Cur_CodVag.Achou) {    
+  nCodVagas = Cur_CodVag.usu_codvag + 1;
+  nretorno = nCodVagas;
+  }
+   Cur_CodVag.FecharCursor();
+   
+   
+    nCodEst = this.codest;
+    nNumEmp = this.numemp;
+    aDesEst = this.desest;
+    aTipCol = this.tipcol;  
+    nNumCad = this.numcad;
+    aPlaVei = this.plavei;
+    aModVei = this.modvei;
+    
+      
+  ExecSql "INSERT INTO usu_T102vaga (usu_codvag,usu_codest,usu_numemp,usu_desest,usu_tipcol,usu_numcad,usu_plavei,usu_modvei) VALUES ( :nretorno,:nCodEst,:nNumEmp,:aDesEst,:aTipCol,:nNumCad,:aPlaVei,:aModVei) ";
+    
+       Cur_InsVag.SQL "SELECT usu_codvag FROM usu_T102vaga WHERE usu_codvag =:nretorno";
+       
+Cur_InsVag.AbrirCursor(); 
+
+      this.ultcad = "Vaga Cadastrada";
+ 
+       
+    Cur_InsVag.FecharCursor();
